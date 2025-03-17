@@ -1,7 +1,8 @@
-package com.example.appmaps.ui
+package com.example.appmaps.ui.uis
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -9,11 +10,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.appmaps.R
 import com.example.appmaps.databinding.ActivityMainBinding
+import com.example.appmaps.ui.models.ClientModel
+import com.example.appmaps.ui.utils_code.FrbAuthProviders
 import com.example.appmaps.ui.utils_code.ReutiliceCode
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var bindMainAct: ActivityMainBinding
+    private val authProvider = FrbAuthProviders()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +60,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         checkEditEmpty(etNameUser, etPasswUser)
 
         if (checkEditEmpty(etNameUser, etPasswUser)){
-            navIntent(RegistAct::class.java)
+
+            authProvider.loginUser(etNameUser, etPasswUser).addOnCompleteListener { aResult ->
+                if (aResult.isSuccessful) {
+                    ReutiliceCode.msgToast(this, "Credenciales correctas.", true)
+                    navIntent(MapsAct::class.java)
+                }else{
+                    ReutiliceCode.msgToast(this, "Credenciales invalidas.", true)
+                    Log.d("LG_REG", "${aResult.result}")
+                }
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.appmaps.ui
+package com.example.appmaps.ui.uis
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,11 +10,16 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.appmaps.R
 import com.example.appmaps.databinding.ActRegistBinding
+import com.example.appmaps.ui.models.ClientModel
+import com.example.appmaps.ui.utils_code.ClientProvider
+import com.example.appmaps.ui.utils_code.FrbAuthProviders
 import com.example.appmaps.ui.utils_code.ReutiliceCode
 
-class RegistAct : AppCompatActivity(), View.OnClickListener {
+class RegistAct() : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var bindRegister: ActRegistBinding
+    private val authProvider = FrbAuthProviders()
+    private val clientProvider = ClientProvider()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +68,27 @@ class RegistAct : AppCompatActivity(), View.OnClickListener {
         Log.d("LG_REG", "$etNameReg, $etNumberReg, $etEmailReg, $etPasswReg")
 
         if (checkEditEmpty(etNameReg, etNumberReg, etEmailReg, etPasswReg)) {
-            navIntent(RegistAct::class.java)
+            authProvider.registerUser(etEmailReg, etPasswReg).addOnCompleteListener { it ->
+                if (it.isSuccessful) {
+                    ReutiliceCode.msgToast(this, "Credenciales guardadas.", true)
+                    val nClient = ClientModel(
+                        authProvider.getIdFrb(),
+                        etNameReg, etNumberReg, etEmailReg, etPasswReg
+                    )
+                    clientProvider.createUser(nClient).addOnCompleteListener { result ->
+                        if (result.isSuccessful) {
+                            ReutiliceCode.msgToast(this, "Usuario registrado!", true)
+                        }else{
+                            ReutiliceCode.msgToast(this, "Usuario no completado... ${result.result.toString()}", true)
+                        }
+                    }
+                    //ReutiliceCode.msgToast(this, "Usuario registrado", true)
+                }else{
+                    ReutiliceCode.msgToast(this, "Credenciales no guardadas.", true)
+                    Log.d("LG_REG", "${it.result}")
+                }
+            }
+            //navIntent(RegistAct::class.java)
         }
     }
 
