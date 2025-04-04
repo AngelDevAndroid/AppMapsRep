@@ -1,4 +1,4 @@
-package com.optic.uberclonekotlin.utils
+package com.example.appmaps.ui.utils_code
 
 import android.animation.ValueAnimator
 import android.util.Log
@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.Marker
 
 
 object CarMoveAnim {
+
     fun carAnim(
         carMarker: Marker, googleMap: GoogleMap, startPosition: LatLng,
         endPosition: LatLng, duration: Int, callback: CancelableCallback?

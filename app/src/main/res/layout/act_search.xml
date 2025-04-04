@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/taxi_user"
+    tools:context=".ui.uis.SearchAct">
+
+    <TextView
+        android:id="@+id/tv_srh_driver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Buscando conductor..."
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/img_anim"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_srh_driver"
+        app:lottie_imageAssetsFolder="assets"
+        app:lottie_fileName="anim_srh_drive.json"
+        app:lottie_loop="true"
+        android:scaleType="centerCrop"
+        app:lottie_autoPlay="true"
+
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

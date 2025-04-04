@@ -1,6 +1,7 @@
 package com.example.appmaps.ui.uis
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
@@ -22,6 +23,10 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.appmaps.R
 import com.example.appmaps.databinding.ActivityMainBinding
 import com.example.appmaps.databinding.ActivityMapsBinding
+import com.example.appmaps.ui.models.Booking
+import com.example.appmaps.ui.models.DriverLocationModel
+import com.example.appmaps.ui.utils_code.BookingProvider
+import com.example.appmaps.ui.utils_code.CarMoveAnim
 import com.example.appmaps.ui.utils_code.FrbAuthProviders
 import com.example.appmaps.ui.utils_code.GeoProvider
 import com.example.appmaps.ui.utils_code.ReutiliceCode
@@ -70,8 +75,10 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
 
     // Vars
     private val authProvider = FrbAuthProviders()
+    private val bookProvider = BookingProvider()
     private var isLocEnabled = false
     private var lstDriverMarkers = ArrayList<Marker>()
+    private var lstDrivLocations = ArrayList<DriverLocationModel>()
 
     // Objects places
     private var places: PlacesClient? = null
@@ -107,6 +114,7 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
 
         initLocCurrent()
         startGooglePlacesWithApiPlaces()
+        checkToRemoveBooking()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -172,6 +180,18 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
         ewlLocation = EasyWayLocation(this, locRequest, false, false, this)
     }
 
+    private fun getPositionDriver(id: String): Int {
+        var position = 0
+        for (i in lstDrivLocations.indices) {
+            if (id == lstDrivLocations[i].id) {
+                position = i
+                break
+            }
+        }
+        return position
+    }
+
+    // Manage drivers nearby
     private fun getNearbyDrivers() {
 
         if (myCoordLocation == null) return
@@ -185,7 +205,7 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
 
                     for (marker in lstDriverMarkers) {
                         if (marker.tag != null){
-                            if (marker.tag == documentID){
+                            if (marker.tag == documentID) {
                                 return
                             }
                         }
@@ -201,6 +221,10 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
                     marker?.tag = documentID
                     lstDriverMarkers.add(marker!!)
                     Log.d("DG_GEO_QY ->", lstDriverMarkers.toString())
+
+                    val driverLoc = DriverLocationModel()
+                    driverLoc.id = documentID
+                    lstDrivLocations.add(driverLoc)
                 }
 
                 // Remove marker of driver disconnected
@@ -211,6 +235,7 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
                             if (maker.tag == documentID) {
                                 maker.remove()
                                 lstDriverMarkers.remove(maker)
+                                lstDrivLocations.removeAt(getPositionDriver(documentID))
                                 return
                             }
                         }
@@ -221,11 +246,26 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
                 // Each that driver be move listen and update
                 override fun onKeyMoved(documentID: String, location: GeoPoint) {
 
+                    val startDriv = LatLng(location.latitude, location.longitude)
+                    var endDriv: LatLng? = null
+
                     for (marker in lstDriverMarkers) {
+
+                        val getPosDriver = getPositionDriver(marker.tag.toString())
+
                         if (marker.tag != null) {
                             if (marker.tag == documentID) {
                                 // Update position driver
                                 marker.position = LatLng(location.latitude, location.longitude)
+
+                                if (lstDrivLocations[getPosDriver].posCoord != null) {
+                                    endDriv = lstDrivLocations[getPosDriver].posCoord
+                                }
+                                lstDrivLocations[getPosDriver].posCoord = LatLng(location.latitude, location.longitude)
+
+                                if (endDriv != null) {
+                                    CarMoveAnim.carAnim(marker, endDriv, startDriv)
+                                }
                             }
                         }
                     }
@@ -243,8 +283,6 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
     }
 
     private fun onCameraMoveToSetLoc() {
-
-        var originName = ""
 
         gMap?.setOnCameraMoveListener {
             try {
@@ -265,7 +303,6 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
                     ReutiliceCode.msgToast(this, "No hay ubicaciòn disponible!", true)
                 }
 
-
             }catch (e: Exception) {
                 Log.d("DG_EX", e.message.toString())
             }
@@ -275,17 +312,40 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.btn_request_trip -> {
-                //disconnectDriver()
+                if (checkETEmpty()) {
+                    passDataActivity()
+                }else{
+                    ReutiliceCode.msgToast(this, "Debe ingresar origen y destino!", true)
+                }
             }
         }
     }
 
+    private fun checkETEmpty(): Boolean {
+        return originName?.isNotEmpty()?: false && destName?.isNotEmpty()?: false
+    }
+
+    private fun navIntent(navCls: Class<*>) {
+        startActivity(Intent(this, navCls))
+    }
+
+    private fun passDataActivity() {
+        val intent = Intent(this, TripInfoAct::class.java) // TripInfoAct
+        intent.putExtra("origin", originName)
+        intent.putExtra("destination", destName)
+        intent.putExtra("origin_lat", originLatLng?.latitude)
+        intent.putExtra("origin_lng", originLatLng?.longitude)
+        intent.putExtra("destination_lat", destLatLng?.latitude)
+        intent.putExtra("destination_lng", destLatLng?.longitude)
+        startActivity(intent)
+    }
+
     override fun locationOn() {
-        TODO("Not yet implemented")
+
     }
 
     override fun currentLocation(location: Location) {
-        this.myCoordLocation =
+        myCoordLocation =
             com.google.android.gms.maps.model.LatLng(location.latitude, location.longitude)
 
             if (!isLocEnabled) {
@@ -338,7 +398,7 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
                 originName = place.name
                 originLatLng = place.latLng
 
-                Log.d("LG_PLACES", "$originName")
+                Log.d("LG_PLACES ->", "$originName")
                 Log.d("LG_PLACES", "${originLatLng?.latitude}")
             }
 
@@ -375,6 +435,18 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
                 Log.d("LG_PLACES", "${status.statusMessage}")
             }
         })
+    }
+
+    // If the status is accept not delete book
+    private fun checkToRemoveBooking() {
+        bookProvider.getBooking().get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val book = document.toObject(Booking::class.java)
+                if (book?.status.equals("create") or book?.status.equals("cancel")) {
+                    bookProvider.removeBook()
+                }
+            }
+         }
     }
 
     override fun locationCancelled() {

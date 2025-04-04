@@ -13,12 +13,19 @@ class GeoProvider {
 
     // Delete collections in firebase
     val delCollection = FirebaseFirestore.getInstance().collection("Locations")
+
     val delGeoFirestore = GeoFirestore(delCollection)
 
     val geoFirestore = GeoFirestore(FirebaseFirestore.getInstance().collection("Locations"))
+    val geoFaiCollectionWorking = GeoFirestore(FirebaseFirestore.getInstance().collection("LocationsWorking"))
+
 
     fun saveLocation(idDriver: String, position: LatLng) {
         geoFirestore.setLocation(idDriver, GeoPoint(position.latitude, position.longitude))
+    }
+
+    fun saveLocationWorking(idDriver: String, position: LatLng) {
+        geoFaiCollectionWorking.setLocation(idDriver, GeoPoint(position.latitude, position.longitude))
     }
 
     fun removeLocationOnly(idDriver: String) {

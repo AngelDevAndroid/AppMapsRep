@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +17,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppMaps"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.uis.MapTripAcceptAct"
+            android:exported="false" />
+        <activity
+            android:name=".ui.uis.SearchAct"
+            android:exported="false" />
+        <activity
+            android:name=".ui.uis.TripInfoAct"
+            android:exported="false" />
         <activity
             android:name=".ui.uis.MapsAct"
             android:exported="false" />
@@ -35,8 +44,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAGTP1yDwTEZ2b9D2Vp8oYnx5boSleR3lw"/>
-
+            android:value="AIzaSyAGTP1yDwTEZ2b9D2Vp8oYnx5boSleR3lw" />
     </application>
 
 </manifest>

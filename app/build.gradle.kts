@@ -80,6 +80,9 @@ dependencies {
     implementation ("com.google.firebase:firebase-firestore:24.6.1")
     implementation ("com.github.imperiumlabs:GeoFirestore-Android:v1.5.0")
 
+    // Anim lotti
+    implementation (libs.lottie)
+
     //implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
