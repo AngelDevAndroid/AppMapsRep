@@ -44,6 +44,8 @@ class SearchAct : AppCompatActivity() {
     private var originLat: LatLng? = null
     private var destinationLng: LatLng? = null
 
+    // -------->
+
     // Objects
     lateinit var bundle: Bundle
     private val geoProvider = GeoProvider()

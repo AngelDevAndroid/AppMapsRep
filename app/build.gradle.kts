@@ -80,6 +80,10 @@ dependencies {
     implementation ("com.google.firebase:firebase-firestore:24.6.1")
     implementation ("com.github.imperiumlabs:GeoFirestore-Android:v1.5.0")
 
+    //
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation (libs.gson)
+
     // Anim lotti
     implementation (libs.lottie)
 

@@ -95,7 +95,6 @@ class TripInfoAct : AppCompatActivity(),
 
         bundle = intent.extras!!
 
-
         val ifIsNull = 0.0
 
         originExtra = bundle.getString("origin")
@@ -182,14 +181,14 @@ class TripInfoAct : AppCompatActivity(),
         markerOrigin = gMap?.addMarker(MarkerOptions()
             .position(originLatLng!!)
             .title("Recoger aqui")
-            .icon(BitmapDescriptorFactory.fromResource(R.drawable.uber_car)))
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_my_location)))
     }
 
     private fun addDestinationMarker() {
         markerDestinate = gMap?.addMarker(MarkerOptions()
             .position(destinationLatLng!!)
             .title("Ir aquì")
-            .icon(BitmapDescriptorFactory.fromResource(R.drawable.uber_car)))
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_destination_marker)))
     }
 
     // Get time and distance trip

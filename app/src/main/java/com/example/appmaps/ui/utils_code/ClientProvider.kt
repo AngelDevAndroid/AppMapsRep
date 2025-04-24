@@ -11,5 +11,4 @@ class ClientProvider {
     fun createUser(clientModel: ClientModel): Task<Void>{
         return db.document(clientModel.idUser?: "").set(clientModel)
     }
-
 }

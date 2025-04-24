@@ -455,7 +455,7 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
 
     override fun onResume() {
         super.onResume()
-        //ewlLocation?.startLocation()
+        ewlLocation?.startLocation()
     }
 
     override fun onPause() {

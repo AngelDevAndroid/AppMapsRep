@@ -73,7 +73,10 @@ class RegistAct() : AppCompatActivity(), View.OnClickListener {
                     ReutiliceCode.msgToast(this, "Credenciales guardadas.", true)
                     val nClient = ClientModel(
                         authProvider.getIdFrb(),
-                        etNameReg, etNumberReg, etEmailReg, etPasswReg
+                        etNameReg,
+                        etNumberReg,
+                        etEmailReg,
+                        etPasswReg
                     )
                     clientProvider.createUser(nClient).addOnCompleteListener { result ->
                         if (result.isSuccessful) {

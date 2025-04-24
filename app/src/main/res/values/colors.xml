@@ -4,7 +4,10 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="black_deg">#FF000000</color>
+    <color name="black_gray">#646464</color>
+
     <color name="yellow">#FFEB3B</color>
+    <color name="clr_cancel">#FFC107</color>
 
     <color name="green_route">#4CAF50</color>
 

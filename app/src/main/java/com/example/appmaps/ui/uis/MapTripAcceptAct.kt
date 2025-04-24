@@ -5,36 +5,30 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.appmaps.R
 import com.example.appmaps.databinding.ActMapTripAcceptBinding
-import com.example.appmaps.databinding.ActivityMapsBinding
 import com.example.appmaps.ui.models.Booking
-import com.example.appmaps.ui.models.DriverLocationModel
+import com.example.appmaps.ui.models.GeoPointModel
 import com.example.appmaps.ui.utils_code.BookingProvider
 import com.example.appmaps.ui.utils_code.CarMoveAnim
 import com.example.appmaps.ui.utils_code.FrbAuthProviders
 import com.example.appmaps.ui.utils_code.GeoProvider
-import com.example.appmaps.ui.utils_code.ReutiliceCode
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.Listener
 import com.example.easywaylocation.draw_path.DirectionUtil
 import com.example.easywaylocation.draw_path.PolyLineDataBean
-import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -47,24 +41,19 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.RectangularBounds
-import com.google.android.libraries.places.api.net.PlacesClient
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.maps.android.SphericalUtil
-import org.imperiumlabs.geofirestore.listeners.GeoQueryEventListener
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
+import org.json.JSONObject
 
 class MapTripAcceptAct : AppCompatActivity(),
                          OnMapReadyCallback,
                          Listener,
                          View.OnClickListener,
-                         DirectionUtil.DirectionCallBack{
+                         DirectionUtil.DirectionCallBack {
 
     // View
     private lateinit var bindMapsAccept: ActMapTripAcceptBinding
@@ -74,25 +63,40 @@ class MapTripAcceptAct : AppCompatActivity(),
     private var gMap: GoogleMap? = null
     lateinit var ewlLocation: EasyWayLocation
     private var setCoordLocation: com.google.android.gms.maps.model.LatLng? = null
-    private var markerDriver: Marker? = null
+
     private var geoProvider = GeoProvider()
     private val authProvider = FrbAuthProviders()
     private val bookProvider = BookingProvider()
 
     private var listenBook: ListenerRegistration? = null
+    private var listenDrivLoc: ListenerRegistration? = null
 
-    private lateinit var timer: CountDownTimer
+    private var posOriginClient: LatLng? = null
+    private var posDestinClient: LatLng? = null
+
+    private var driverLoc: LatLng? = null
+    private var endLatLng: LatLng? = null
+
+    private lateinit var directionUtil: DirectionUtil
+    private var book: Booking? = null
+
+    private var markerLocDriver: Marker? = null
+    private var markerOriginClient: Marker? = null
+    private var markerDestinateClient: Marker? = null
 
     // Vars
     private var wayPoints: ArrayList<LatLng> = ArrayList()
     private val WAY_POINT_TAG = "way_point_tag"
-    private lateinit var directionUtil: DirectionUtil
 
+    private var isDrivLocFound = false
+    private var isBookingLoader = false
 
 
     //private lateinit var currentLocation: Location
     //private lateinit var flProviderLocation: FusedLocationProviderClient
     private val permissionCode = 101
+    val ifIsNull = LatLng(0.0, 0.0)
+    var msgStatusTrip = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,31 +130,31 @@ class MapTripAcceptAct : AppCompatActivity(),
             insets
         }
 
-        counterModalDialog()
     }
 
     private fun initObjects() {
-        bindMapsAccept.btnStart.setOnClickListener(this)
-        bindMapsAccept.btnFinish.setOnClickListener(this)
+        //bindMapsAccept.btnStart.setOnClickListener(this)
+        //bindMapsAccept.btnFinish.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
-        when(v?.id) {
+        /*when(v?.id) {
             R.id.btn_start -> {
                 connectDriver()
             }
             R.id.btn_finish -> {
                 disconnectDriver()
             }
-        }
+        }*/
     }
-
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override fun onMapReady(map: GoogleMap) {
         gMap = map
         gMap?.uiSettings?.isZoomControlsEnabled = true
-        gMap?.isMyLocationEnabled = false
+        //gMap?.isMyLocationEnabled = false
+
+        getBooking()
     }
 
     override fun onRequestPermissionsResult(
@@ -161,7 +165,7 @@ class MapTripAcceptAct : AppCompatActivity(),
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults, deviceId)
 
-        when(requestCode){
+        when(requestCode) {
             permissionCode -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
             }
@@ -173,11 +177,11 @@ class MapTripAcceptAct : AppCompatActivity(),
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
                 when {
                     permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-                        ewlLocation.startLocation()
+                        //ewlLocation.startLocation()
                         Log.d("TAG_PERMS", "Permiso aceptado")
                     }
                     permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-                        ewlLocation.startLocation()
+                        //ewlLocation.startLocation()
                         Log.d("TAG_PERMS", "Permiso aceptado con limitaciòn")
                     }
                     else -> {
@@ -192,33 +196,146 @@ class MapTripAcceptAct : AppCompatActivity(),
     }
 
     override fun currentLocation(location: Location) {
-        setCoordLocation =
-            com.google.android.gms.maps.model.LatLng(location.latitude, location.longitude)
-        gMap?.moveCamera(
-            CameraUpdateFactory
-                .newCameraPosition(CameraPosition.builder().target(setCoordLocation!!).zoom(17f).build()))
 
-        addMarker()
-        saveLocation()
     }
 
-    private fun addMarker() {
-        val drawable = ContextCompat.getDrawable(this, R.drawable.ic_origin)
-        val markerIcon = getMarkerFromDrawable(drawable!!)
+    // Draw route and add marker client
+    private fun getBooking() {
 
-        if (markerDriver != null) {
-            markerDriver!!.remove()
-        }
+        // addSnapshotListener -> se ejecuta siempre realtime, se actualiza
+        listenBook = bookProvider.getBooking().addSnapshotListener { document, error ->
+            if (error?.message != null) {
+                Log.d("LG_LISTEN", "${error.message}")
+                return@addSnapshotListener
+            }
 
-        if (setCoordLocation != null){
-            markerDriver = gMap?.addMarker(
-                MarkerOptions()
-                    .position(setCoordLocation!!)
-                    .anchor(0.5f, 0.5f)
-                    .flat(true)
-                    .icon(markerIcon)
-            )
+            book = document?.toObject(Booking::class.java)
+
+            if (!isBookingLoader) {
+                isBookingLoader = true
+
+                posOriginClient = LatLng(book?.originLat?: 0.0,book?.originLng?: 0.0)
+                posDestinClient = LatLng(book?.destinationLat?: 0.0,book?.destinationLng?: 0.0)
+                Log.d("TAG_CRD", "${posOriginClient?.latitude}")
+
+                gMap?.moveCamera(
+                    CameraUpdateFactory
+                        .newCameraPosition(CameraPosition.builder().target(posOriginClient!!).zoom(17f).build()))
+
+                getLocDriver()
+                addOriginMarkerClient(originLatLngX = posOriginClient?: ifIsNull)
+            }
+
+            when (book?.status) {
+                "accept" -> {
+                    msgStatusTrip = "Aceptado"
+                }
+                "started" -> {
+                    msgStatusTrip = "Iniciado"
+                    startedTrip()
+                }
+                "finished" -> {
+                    msgStatusTrip = "Finalizado"
+                    finishedTrip(RatingDriverAct::class.java)
+                }
+            }
+
+            bindMapsAccept.tvStatusTrip.text = "Estatus del viaje: $msgStatusTrip"
         }
+    }
+
+    private fun startedTrip() {
+        //addMarkerDriver(driverLoc?: ifIsNull)
+        markerOriginClient?.remove()
+        addDestinMarkerClient()
+        easyDrawRoute(driverLoc?: ifIsNull,posDestinClient?: ifIsNull)
+    }
+
+    private fun finishedTrip(navCls: Class<*>) {
+        listenDrivLoc?.remove()
+        val intent = Intent(this, navCls)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+    }
+
+    private fun getLocDriver() {
+
+        listenDrivLoc = geoProvider.getLocWorking(book?.idDriver?: "")
+            .addSnapshotListener { document, error ->
+            if (error?.message != null) {
+                Log.d("LG_LISTEN", "${error.message}")
+                return@addSnapshotListener
+            }
+
+            if (document?.exists()!!) {
+                val getCoord = document.get("l")
+                val gson = Gson()
+                val getJsonLoc: String = gson.toJson(getCoord)
+
+                val builder = GsonBuilder().setPrettyPrinting().create()
+                val getPosition = builder.fromJson(getJsonLoc, GeoPointModel::class.java)
+
+                Log.d("LG_LISTEN", "$getPosition")
+
+                val lat = getPosition.latitude
+                val lng = getPosition.longitude
+
+                driverLoc = LatLng(lat, lng)
+                endLatLng = driverLoc
+                //markerLocDriver?.remove()
+
+                if (!isDrivLocFound) {
+                    isDrivLocFound = true
+                    addMarkerDriver(driverLoc?: ifIsNull)
+                    easyDrawRoute(driverLoc?: ifIsNull,posDestinClient?: ifIsNull)
+                }
+
+                if (endLatLng != null) {
+                    CarMoveAnim.carAnim(markerLocDriver!!,endLatLng?: ifIsNull,driverLoc?: ifIsNull)
+                }
+            }
+        }
+    }
+
+    private fun addMarkerDriver(originLatLngX: LatLng) {
+        markerLocDriver = gMap?.addMarker(MarkerOptions()
+            .position(originLatLngX)
+            .title("Tu conductor")
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_uber_car)))
+    }
+
+    private fun addOriginMarkerClient(originLatLngX: LatLng) {
+        markerOriginClient = gMap?.addMarker(MarkerOptions()
+            .position(originLatLngX)
+            .title("Aquì estoy")
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.icons_location_person)))
+    }
+
+    private fun addDestinMarkerClient() {
+        markerDestinateClient = gMap?.addMarker(MarkerOptions()
+            .position(posDestinClient?: ifIsNull)
+            .title("Ir aquì")
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_destination_marker)))
+    }
+
+    private fun easyDrawRoute(originLatLng: LatLng, destinLatLng: LatLng) {
+
+        //wayPoints.clear()
+        wayPoints.add(originLatLng?: ifIsNull)
+        wayPoints.add(destinLatLng)
+        directionUtil = DirectionUtil.Builder()
+            .setDirectionKey(resources.getString(R.string.google_maps_key))
+            .setOrigin(originLatLng?: ifIsNull)
+            .setWayPoints(wayPoints)
+            .setGoogleMap(gMap!!)
+            .setPolyLinePrimaryColor(R.color.green_route)
+            .setPolyLineWidth(10)
+            .setPathAnimation(true)
+            .setCallback(this)
+            .setDestination(destinLatLng)
+            .build()
+
+        directionUtil.initPath()
     }
 
     private fun getMarkerFromDrawable(drawable: Drawable): BitmapDescriptor {
@@ -258,7 +375,7 @@ class MapTripAcceptAct : AppCompatActivity(),
     }
 
     private fun disconnectDriver() {
-        ewlLocation?.endUpdates()
+        ewlLocation.endUpdates()
         if (setCoordLocation != null) {
             //geoProvider.removeLocationOnly(authProvider.getIdFrb())
             geoProvider.delCollLocationAllTree(authProvider.getIdFrb())
@@ -268,35 +385,21 @@ class MapTripAcceptAct : AppCompatActivity(),
 
     // Connect loc current handly
     private fun connectDriver() {
-        ewlLocation?.endUpdates()
-        ewlLocation?.startLocation()
+        ewlLocation.endUpdates()
+        ewlLocation.startLocation()
         //showBtnDisconnect()
-    }
-
-
-    // Timer to hide bsd
-    private fun counterModalDialog() {
-        timer = object : CountDownTimer(20000, 1000) {
-            override fun onTick(counter: Long) {
-                Log.d("TAG_COUNTER", "$counter")
-            }
-
-            override fun onFinish() {
-                //modalBooking.dismiss()
-                Log.d("TAG_COUNTER", "onFinish ->")
-            }
-        }
     }
 
     override fun onPause() {
         super.onPause()
-        ewlLocation?.endUpdates()
+        ewlLocation.endUpdates()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        ewlLocation?.endUpdates()
+        ewlLocation.endUpdates()
         listenBook?.remove()
+        listenDrivLoc?.remove()
         //geoProvider.removeLocationOnly(authProvider.getIdFrb())
     }
 
@@ -304,6 +407,6 @@ class MapTripAcceptAct : AppCompatActivity(),
         polyLineDetailsMap: HashMap<String, PolyLineDataBean>,
         polyLineDetailsArray: ArrayList<PolyLineDataBean>
     ) {
-        TODO("Not yet implemented")
+        directionUtil.drawPath(WAY_POINT_TAG)
     }
 }
