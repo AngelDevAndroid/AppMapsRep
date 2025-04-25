@@ -11,8 +11,8 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.appmaps.R
 import com.example.appmaps.databinding.ActRegistBinding
 import com.example.appmaps.ui.models.ClientModel
-import com.example.appmaps.ui.utils_code.ClientProvider
-import com.example.appmaps.ui.utils_code.FrbAuthProviders
+import com.example.appmaps.ui.utils_provider.ClientProvider
+import com.example.appmaps.ui.utils_provider.FrbAuthProviders
 import com.example.appmaps.ui.utils_code.ReutiliceCode
 
 class RegistAct() : AppCompatActivity(), View.OnClickListener {
@@ -53,7 +53,7 @@ class RegistAct() : AppCompatActivity(), View.OnClickListener {
                 checkCredentialsLogin()
             }
             R.id.btn_login_reg -> {
-                navIntent(RegistAct::class.java)
+                navIntent(MainActivity::class.java)
             }
         }
     }

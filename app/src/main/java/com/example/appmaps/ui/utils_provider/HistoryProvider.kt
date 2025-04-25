@@ -1,10 +1,9 @@
-package com.example.appmaps.ui.utils_code
+package com.example.appmaps.ui.utils_provider
 
 import android.util.Log
 
 import com.example.appmaps.ui.models.HistoryTrip
 import com.google.android.gms.tasks.Task
-import com.google.api.AuthProvider
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -24,7 +23,7 @@ class HistoryProvider {
 
     // Consulta compuesta , requiere collection indexed
     fun getLastHistory(): Query {
-        return db.whereEqualTo("idDriver", authProvider.getIdFrb())
+        return db.whereEqualTo("idClient", authProvider.getIdFrb())
             .orderBy("timeStamp", Query.Direction.DESCENDING)
             .limit(1)
     }

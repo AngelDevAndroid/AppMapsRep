@@ -21,9 +21,9 @@ import com.example.appmaps.R
 import com.example.appmaps.databinding.ActMapTripAcceptBinding
 import com.example.appmaps.ui.models.Booking
 import com.example.appmaps.ui.models.GeoPointModel
-import com.example.appmaps.ui.utils_code.BookingProvider
+import com.example.appmaps.ui.utils_provider.BookingProvider
 import com.example.appmaps.ui.utils_code.CarMoveAnim
-import com.example.appmaps.ui.utils_code.FrbAuthProviders
+import com.example.appmaps.ui.utils_provider.FrbAuthProviders
 import com.example.appmaps.ui.utils_code.GeoProvider
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.Listener
@@ -42,12 +42,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
-import org.json.JSONObject
 
 class MapTripAcceptAct : AppCompatActivity(),
                          OnMapReadyCallback,

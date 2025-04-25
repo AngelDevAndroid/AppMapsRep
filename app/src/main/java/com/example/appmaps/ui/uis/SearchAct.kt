@@ -4,24 +4,22 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.appmaps.R
 import com.example.appmaps.databinding.ActSearchBinding
-import com.example.appmaps.databinding.ActTripInfoBinding
 import com.example.appmaps.ui.models.Booking
-import com.example.appmaps.ui.utils_code.BookingProvider
-import com.example.appmaps.ui.utils_code.FrbAuthProviders
+import com.example.appmaps.ui.utils_provider.BookingProvider
+import com.example.appmaps.ui.utils_provider.FrbAuthProviders
 import com.example.appmaps.ui.utils_code.GeoProvider
 import com.example.appmaps.ui.utils_code.ReutiliceCode
 import com.google.android.gms.maps.model.LatLng
-import com.google.api.AuthProvider
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.ListenerRegistration
 import org.imperiumlabs.geofirestore.listeners.GeoQueryEventListener
+import java.util.Date
 
 class SearchAct : AppCompatActivity() {
 
@@ -168,10 +166,11 @@ class SearchAct : AppCompatActivity() {
             originLng = originExtraLng,
             destinationLat = destExtraLatLat,
             destinationLng = destExtraLatLng,
-            price = 100.0
+            price = 100.0,
+            timeStamp = Date().time
         )
 
-        bookingProvider.create(booking).addOnCompleteListener { task ->
+        bookingProvider.createBookingTrip(booking).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 ReutiliceCode.msgToast(this, "Datos del viaje creado", false)
             }else{

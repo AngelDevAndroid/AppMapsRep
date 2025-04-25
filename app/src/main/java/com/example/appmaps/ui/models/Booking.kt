@@ -14,5 +14,6 @@ data class Booking(
     var originLng: Double? = null,
     var destinationLat: Double? = null,
     var destinationLng: Double? = null,
-    var price: Double? = null
+    var price: Double? = null,
+    var timeStamp: Long? = null
 )

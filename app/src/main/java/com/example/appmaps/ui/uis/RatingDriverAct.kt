@@ -11,7 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.appmaps.R
 import com.example.appmaps.databinding.ActRatingDriverBinding
 import com.example.appmaps.ui.models.HistoryTrip
-import com.example.appmaps.ui.utils_code.HistoryProvider
+import com.example.appmaps.ui.utils_provider.HistoryProvider
 import com.example.appmaps.ui.utils_code.ReutiliceCode
 import java.lang.StringBuilder
 

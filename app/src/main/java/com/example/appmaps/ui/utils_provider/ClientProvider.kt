@@ -1,4 +1,4 @@
-package com.example.appmaps.ui.utils_code
+package com.example.appmaps.ui.utils_provider
 
 import com.example.appmaps.ui.models.ClientModel
 import com.google.android.gms.tasks.Task

@@ -1,11 +1,10 @@
-package com.example.appmaps.ui.utils_code
+package com.example.appmaps.ui.utils_provider
 
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.squareup.okhttp.internal.DiskLruCache.Snapshot
 
 class ConfigProvider {
 

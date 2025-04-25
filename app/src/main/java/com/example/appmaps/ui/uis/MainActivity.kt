@@ -10,8 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.appmaps.R
 import com.example.appmaps.databinding.ActivityMainBinding
-import com.example.appmaps.ui.models.ClientModel
-import com.example.appmaps.ui.utils_code.FrbAuthProviders
+import com.example.appmaps.ui.utils_provider.FrbAuthProviders
 import com.example.appmaps.ui.utils_code.ReutiliceCode
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
