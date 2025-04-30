@@ -52,7 +52,7 @@ dependencies {
     //implementation (platform(libs.firebase.bom.v33100))
 
     //implementation (libs.firebase.firestore.ktx)
-    implementation ("com.google.firebase:firebase-firestore-ktx")
+    //implementation ("com.google.firebase:firebase-firestore-ktx")
     implementation ("com.google.firebase:firebase-auth-ktx")
 
 
@@ -77,7 +77,7 @@ dependencies {
     //implementation (libs.github.geofirestore.android)
     implementation ("com.github.prabhat1707:EasyWayLocation:2.4")
 
-    implementation ("com.google.firebase:firebase-firestore:24.6.1")
+    //implementation ("com.google.firebase:firebase-firestore:24.6.1")
     implementation ("com.github.imperiumlabs:GeoFirestore-Android:v1.5.0")
 
     //
@@ -86,6 +86,18 @@ dependencies {
 
     // Anim lotti
     implementation (libs.lottie)
+
+    // Glide img
+    implementation (libs.github.glide)
+
+    // Image picker
+    implementation (libs.dhaval2404.imagepicker)
+
+    implementation (libs.firebase.firestore.ktx)
+    implementation (libs.firebase.storage)
+
+    // FCM
+    implementation ("com.google.firebase:firebase-messaging:20.2.4")
 
     //implementation(libs.firebase.auth)
     testImplementation(libs.junit)

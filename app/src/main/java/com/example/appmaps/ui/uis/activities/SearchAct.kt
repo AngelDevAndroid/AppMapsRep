@@ -1,4 +1,4 @@
-package com.example.appmaps.ui.uis
+package com.example.appmaps.ui.uis.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -13,8 +13,8 @@ import com.example.appmaps.databinding.ActSearchBinding
 import com.example.appmaps.ui.models.Booking
 import com.example.appmaps.ui.utils_provider.BookingProvider
 import com.example.appmaps.ui.utils_provider.FrbAuthProviders
-import com.example.appmaps.ui.utils_code.GeoProvider
-import com.example.appmaps.ui.utils_code.ReutiliceCode
+import com.example.appmaps.ui.utils_provider.GeoProvider
+import com.example.appmaps.ui.utils_code.ReuseCode
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.ListenerRegistration
@@ -172,9 +172,9 @@ class SearchAct : AppCompatActivity() {
 
         bookingProvider.createBookingTrip(booking).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                ReutiliceCode.msgToast(this, "Datos del viaje creado", false)
+                ReuseCode.msgToast(this, "Datos del viaje creado", false)
             }else{
-                ReutiliceCode.msgToast(this, "Datos del viaje no creado", false)
+                ReuseCode.msgToast(this, "Datos del viaje no creado", false)
             }
         }
     }
@@ -196,12 +196,12 @@ class SearchAct : AppCompatActivity() {
                     "accept" -> {
                         listenerBooking?.remove()
                         goToMapTripAccept(MapTripAcceptAct::class.java, 0)
-                        ReutiliceCode.msgToast(this,"Viaje aceptado",true)
+                        ReuseCode.msgToast(this,"Viaje aceptado",true)
                     }
                     "cancel" -> {
                         listenerBooking?.remove()
                         goToMapTripAccept(MapsAct::class.java, 1)
-                        ReutiliceCode.msgToast(this, "Viaje cancelado!", true)
+                        ReuseCode.msgToast(this, "Viaje cancelado!", true)
                     }
                 }
             }

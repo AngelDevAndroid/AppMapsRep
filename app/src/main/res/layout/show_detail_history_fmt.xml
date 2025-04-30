@@ -1,40 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.uis.activities.TripInfoAct">
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fmt_cont_trip"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.uis.fragments.ShowDetailHistoryFmt">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tb_back"
+        android:id="@+id/tb_prof"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@null"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:background="@color/green_route"
         app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/white"
+        android:titleTextColor="@android:color/transparent" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/green_route"
+        app:layout_constraintTop_toBottomOf="@+id/tb_prof" />
+
+    <ImageView
+        android:id="@+id/iv_det_hist"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_login"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/tb_prof" />
+
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="Email"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/iv_det_hist" />
 
     <ImageView
         android:id="@+id/iv_origin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
         android:src="@drawable/ic_origin_trip"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fmt_cont_trip" />
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <TextView
         android:id="@+id/tv_head_origin"
@@ -49,7 +67,7 @@
         android:layout_marginStart="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_origin"
-        app:layout_constraintTop_toBottomOf="@+id/fmt_cont_trip" />
+        app:layout_constraintTop_toBottomOf="@+id/view"  />
 
     <TextView
         android:id="@+id/tv_origin"
@@ -70,7 +88,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_dest_trip"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_origin" />
 
@@ -107,7 +125,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_time_trip"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_destination" />
 
@@ -144,7 +162,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_price_trip"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_time_distance" />
 
@@ -175,20 +193,115 @@
         app:layout_constraintStart_toEndOf="@+id/iv_price"
         app:layout_constraintTop_toBottomOf="@+id/tv_head_price" />
 
-    <Button
-        android:id="@+id/btn_confirm_trip"
-        android:layout_width="300dp"
+    <ImageView
+        android:id="@+id/iv_date"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/yellow"
-        android:gravity="center"
-        android:text="Confirmar viaje"
-        android:textColor="@color/black"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp" />
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_date_trip"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_price" />
+
+    <TextView
+        android:id="@+id/tv_head_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:gravity="start"
+        android:text="Fecha del viaje"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_price"
+        app:layout_constraintTop_toTopOf="@+id/iv_date" />
+
+    <TextView
+        android:id="@+id/tv_date_trip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:gravity="start"
+        android:hint="0/0/0"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_price"
+        app:layout_constraintTop_toBottomOf="@+id/tv_head_date" />
+
+    <ImageView
+        android:id="@+id/iv_star_driver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_star_rating"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_date" />
+
+    <TextView
+        android:id="@+id/tv_head_rating_driv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:gravity="start"
+        android:text="Calificaciòn obtenida"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_price"
+        app:layout_constraintTop_toTopOf="@+id/iv_star_driver" />
+
+    <TextView
+        android:id="@+id/tv_rating_driv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:gravity="start"
+        android:hint="0"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_price"
+        app:layout_constraintTop_toBottomOf="@+id/tv_head_rating_driv" />
+
+    <ImageView
+        android:id="@+id/iv_star_client"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_star_rating"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_star_driver" />
+
+    <TextView
+        android:id="@+id/tv_head_rating_client"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:gravity="start"
+        android:text="Calificaciòn del cliente"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_price"
+        app:layout_constraintTop_toTopOf="@+id/iv_star_client" />
+
+    <TextView
+        android:id="@+id/tv_rating_client"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:gravity="start"
+        android:hint="0"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_price"
+        app:layout_constraintTop_toBottomOf="@+id/tv_head_rating_client" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

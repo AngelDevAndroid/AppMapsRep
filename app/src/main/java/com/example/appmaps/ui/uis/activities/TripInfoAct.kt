@@ -1,4 +1,4 @@
-package com.example.appmaps.ui.uis
+package com.example.appmaps.ui.uis.activities
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -256,7 +256,7 @@ class TripInfoAct : AppCompatActivity(),
                 /*if (checkETEmpty()) {
                     passDataActivity()
                 }else{
-                    ReutiliceCode.msgToast(this, "Debe ingresar origen y destino!", true)
+                    ReuseCode.msgToast(this, "Debe ingresar origen y destino!", true)
                 }*/
             }
         }

@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.appmaps.ui.models.Booking
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -23,6 +24,11 @@ class BookingProvider {
     // Get trip data frbs
     fun getBooking(): DocumentReference {
         return db.document(authProvider.getIdFrb())
+    }
+
+    fun getBookingToTripModal(): Query {
+        return db.whereEqualTo("idClient", authProvider.getIdFrb())
+            .orderBy("timeStamp", Query.Direction.DESCENDING).limit(1)
     }
 
     // Remove data trip frbs

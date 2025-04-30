@@ -2,10 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -18,25 +23,28 @@
         android:theme="@style/Theme.AppMaps"
         tools:targetApi="31">
         <activity
-            android:name=".ui.uis.RatingDriverAct"
+            android:name=".ui.uis.activities.RatingDriverAct"
             android:exported="false" />
         <activity
-            android:name=".ui.uis.MapTripAcceptAct"
+            android:name=".ui.uis.activities.MapTripAcceptAct"
             android:exported="false" />
         <activity
-            android:name=".ui.uis.SearchAct"
+            android:name=".ui.uis.activities.SearchAct"
             android:exported="false" />
         <activity
-            android:name=".ui.uis.TripInfoAct"
+            android:name=".ui.uis.activities.TripInfoAct"
             android:exported="false" />
         <activity
-            android:name=".ui.uis.MapsAct"
+            android:name=".ui.uis.activities.MapsAct"
             android:exported="false" />
         <activity
-            android:name=".ui.uis.RegistAct"
+            android:name=".ui.uis.activities.ContinerMenuFmts"
             android:exported="false" />
         <activity
-            android:name=".ui.uis.MainActivity"
+            android:name=".ui.uis.activities.RegistAct"
+            android:exported="false" />
+        <activity
+            android:name=".ui.uis.activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,6 +56,25 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAGTP1yDwTEZ2b9D2Vp8oYnx5boSleR3lw" />
+
+        <!--Api key maps-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAGTP1yDwTEZ2b9D2Vp8oYnx5boSleR3lw" />
+
+        <!--Push notif -->
+        <service
+            android:name=".services.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!--Push notif chanel api 8 -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
     </application>
 
 </manifest>

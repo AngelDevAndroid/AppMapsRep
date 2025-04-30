@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/taxi_user"
-    tools:context=".ui.uis.SearchAct">
+    tools:context=".ui.uis.activities.SearchAct">
 
     <TextView
         android:id="@+id/tv_srh_driver"

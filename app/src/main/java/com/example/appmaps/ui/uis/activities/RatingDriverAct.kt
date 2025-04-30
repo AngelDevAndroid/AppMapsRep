@@ -1,4 +1,4 @@
-package com.example.appmaps.ui.uis
+package com.example.appmaps.ui.uis.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,9 +10,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.appmaps.R
 import com.example.appmaps.databinding.ActRatingDriverBinding
-import com.example.appmaps.ui.models.HistoryTrip
+import com.example.appmaps.ui.models.HistoryTripModel
 import com.example.appmaps.ui.utils_provider.HistoryProvider
-import com.example.appmaps.ui.utils_code.ReutiliceCode
+import com.example.appmaps.ui.utils_code.ReuseCode
 import java.lang.StringBuilder
 
 class RatingDriverAct : AppCompatActivity(), View.OnClickListener {
@@ -21,7 +21,7 @@ class RatingDriverAct : AppCompatActivity(), View.OnClickListener {
     //private var getExtraPrice = 0.0
     val historyProvider = HistoryProvider()
 
-    var history: HistoryTrip? = null
+    var history: HistoryTripModel? = null
     private var setRating = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,13 +52,13 @@ class RatingDriverAct : AppCompatActivity(), View.OnClickListener {
         historyProvider.getLastHistory().get().addOnSuccessListener { query ->
             if (query != null) {
                 if (query.documents.size > 0) {
-                    history = query.documents[0].toObject(HistoryTrip::class.java)
+                    history = query.documents[0].toObject(HistoryTripModel::class.java)
                     history?.id = query.documents[0].id
                     setDataRating(history)
                     Log.d("LG_FIRESTORE", "history -> ${history}")
                 }else{
                     Log.d("LG_FIRESTORE", "history -> ${query.documents.size}")
-                    ReutiliceCode.msgToast(this, "No se encontro el historial! ${query.documents.size}", true)
+                    ReuseCode.msgToast(this, "No se encontro el historial! ${query.documents.size}", true)
                 }
             }else{
                 Log.d("LG_FIRESTORE", "history -> $query")
@@ -69,7 +69,7 @@ class RatingDriverAct : AppCompatActivity(), View.OnClickListener {
     }
 
     // Set data
-    private fun setDataRating(history: HistoryTrip?) {
+    private fun setDataRating(history: HistoryTripModel?) {
         bindRating.tvOrigin.text = history?.origin
         bindRating.tvDestination.text = history?.destination
 
@@ -90,7 +90,7 @@ class RatingDriverAct : AppCompatActivity(), View.OnClickListener {
             if (resultUp.isSuccessful) {
                 goToMapDriver()
             }else{
-                ReutiliceCode.msgToast(this, "No se pudo calificar!", true)
+                ReuseCode.msgToast(this, "No se pudo calificar!", true)
             }
         }
     }

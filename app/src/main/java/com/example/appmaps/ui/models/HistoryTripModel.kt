@@ -1,7 +1,7 @@
 package com.example.appmaps.ui.models
 
 // Model
-data class HistoryTrip(
+data class HistoryTripModel(
     var id: String? = null,
     var idClient: String? = null,
     var idDriver: String? = null,

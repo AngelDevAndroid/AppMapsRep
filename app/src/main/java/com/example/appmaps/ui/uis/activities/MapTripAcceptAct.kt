@@ -1,4 +1,4 @@
-package com.example.appmaps.ui.uis
+package com.example.appmaps.ui.uis.activities
 
 import android.Manifest
 import android.content.Intent
@@ -9,22 +9,28 @@ import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.createBitmap
+import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
 import com.example.appmaps.R
 import com.example.appmaps.databinding.ActMapTripAcceptBinding
 import com.example.appmaps.ui.models.Booking
 import com.example.appmaps.ui.models.GeoPointModel
+import com.example.appmaps.ui.uis.fragments.MenuTripAcceptFmt
 import com.example.appmaps.ui.utils_provider.BookingProvider
 import com.example.appmaps.ui.utils_code.CarMoveAnim
 import com.example.appmaps.ui.utils_provider.FrbAuthProviders
-import com.example.appmaps.ui.utils_code.GeoProvider
+import com.example.appmaps.ui.utils_provider.GeoProvider
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.Listener
 import com.example.easywaylocation.draw_path.DirectionUtil
@@ -54,6 +60,7 @@ class MapTripAcceptAct : AppCompatActivity(),
 
     // View
     private lateinit var bindMapsAccept: ActMapTripAcceptBinding
+    private val modalMenu = MenuTripAcceptFmt()
     //private val modalBooking = FmtRequestTripInf()
 
     // Objects
@@ -130,8 +137,31 @@ class MapTripAcceptAct : AppCompatActivity(),
     }
 
     private fun initObjects() {
+        setMenuTb()
         //bindMapsAccept.btnStart.setOnClickListener(this)
         //bindMapsAccept.btnFinish.setOnClickListener(this)
+    }
+
+    private fun setMenuTb() {
+
+        setSupportActionBar(bindMapsAccept.tbMap)
+        supportActionBar?.title = ""
+
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.toolbar_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.action_menu -> {
+                        modalMenu.show(supportFragmentManager, MenuTripAcceptFmt.TAG)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, this, Lifecycle.State.RESUMED)
     }
 
     override fun onClick(v: View?) {

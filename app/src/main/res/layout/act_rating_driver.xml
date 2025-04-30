@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black_gray"
-    tools:context=".ui.uis.RatingDriverAct">
+    tools:context=".ui.uis.activities.RatingDriverAct">
 
     <TextView
         android:id="@+id/tv_head"

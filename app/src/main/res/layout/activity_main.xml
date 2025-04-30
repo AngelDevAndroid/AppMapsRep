@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.uis.MainActivity">
+    tools:context=".ui.uis.activities.MainActivity">
 
     <ImageView
         android:id="@+id/imageView2"
@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:startIconDrawable="@drawable/ic_passw"
+                app:startIconDrawable="@drawable/ic_password"
                 app:startIconTint="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText

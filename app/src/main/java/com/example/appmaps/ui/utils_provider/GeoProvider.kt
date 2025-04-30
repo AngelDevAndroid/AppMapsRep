@@ -1,4 +1,4 @@
-package com.example.appmaps.ui.utils_code
+package com.example.appmaps.ui.utils_provider
 
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng

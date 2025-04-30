@@ -1,4 +1,4 @@
-package com.example.appmaps.ui.uis
+package com.example.appmaps.ui.uis.activities
 
 import android.Manifest
 import android.content.Intent
@@ -8,22 +8,28 @@ import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
 import com.example.appmaps.R
 import com.example.appmaps.databinding.ActivityMapsBinding
 import com.example.appmaps.ui.models.Booking
 import com.example.appmaps.ui.models.DriverLocationModel
+import com.example.appmaps.ui.uis.fragments.MenuModBotmFmt
 import com.example.appmaps.ui.utils_provider.BookingProvider
 import com.example.appmaps.ui.utils_code.CarMoveAnim
 import com.example.appmaps.ui.utils_provider.FrbAuthProviders
-import com.example.appmaps.ui.utils_code.GeoProvider
-import com.example.appmaps.ui.utils_code.ReutiliceCode
+import com.example.appmaps.ui.utils_provider.GeoProvider
+import com.example.appmaps.ui.utils_code.ReuseCode
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.Listener
 import com.google.android.gms.common.api.Status
@@ -55,6 +61,8 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
     private lateinit var bindMapsDriver: ActivityMapsBinding
     private lateinit var placesClient: PlacesClient
     private lateinit var sessionToken: AutocompleteSessionToken
+
+    private val modalMenu = MenuModBotmFmt()
 
     // Objects
     private var gMap: GoogleMap? = null
@@ -115,6 +123,9 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
 
     private fun initObjects() {
         bindMapsDriver.btnRequestTrip.setOnClickListener(this)
+        setSupportActionBar(bindMapsDriver.tbMap)
+        bindMapsDriver.tbMap.setTitle("ssss")
+        setMenuTb()
     }
 
     val locPermission =
@@ -290,7 +301,7 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
                     originName = "$address $city"
                     autoCompOrig?.setText(originName)
                 }else{
-                    ReutiliceCode.msgToast(this, "No hay ubicaciòn disponible!", true)
+                    ReuseCode.msgToast(this, "No hay ubicaciòn disponible!", true)
                 }
 
             }catch (e: Exception) {
@@ -305,7 +316,7 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
                 if (checkETEmpty()) {
                     passDataActivity()
                 }else{
-                    ReutiliceCode.msgToast(this, "Debe ingresar origen y destino!", true)
+                    ReuseCode.msgToast(this, "Debe ingresar origen y destino!", true)
                 }
             }
         }
@@ -441,6 +452,24 @@ class MapsAct : AppCompatActivity(), OnMapReadyCallback, Listener, View.OnClickL
 
     override fun locationCancelled() {
         TODO("Not yet implemented")
+    }
+
+    private fun setMenuTb() {
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.toolbar_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.action_menu -> {
+                        modalMenu.show(supportFragmentManager, MenuModBotmFmt.TAG)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, this, Lifecycle.State.RESUMED)
     }
 
     override fun onResume() {

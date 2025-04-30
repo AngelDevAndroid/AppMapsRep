@@ -3,10 +3,13 @@ agp = "8.9.2"
 androidMapsUtils = "2.2.3"
 firebaseBom = "31.0.1"
 firebaseBomVersion = "33.10.0"
+firebaseMessaging = "24.1.1"
 githubEasywaylocation = "2.4"
 githubGeofirestoreAndroid = "v1.5.0"
+glideVersion = "4.16.0"
 googlePlayServices = "17.0.0"
 gson = "2.10.1"
+imagepickerVersion = "2.1"
 kotlin = "2.0.21"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -30,11 +33,15 @@ volley = "1.2.1"
 android-maps-utils = { module = "com.google.maps.android:android-maps-utils", version.ref = "androidMapsUtils" }
 android-places-ktx = { module = "com.google.maps.android:places-ktx", version.ref = "placesKtxVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+dhaval2404-imagepicker = { module = "com.github.dhaval2404:imagepicker", version.ref = "imagepickerVersion" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-bom-v33100 = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBomVersion" }
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
+firebase-storage = { module = "com.google.firebase:firebase-storage" }
 github-easywaylocation = { module = "com.github.prabhat1707:EasyWayLocation", version.ref = "githubEasywaylocation" }
 github-geofirestore-android = { module = "com.github.imperiumlabs:GeoFirestore-Android", version.ref = "githubGeofirestoreAndroid" }
+github-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glideVersion" }
 google-play-services = { module = "com.google.android.gms:play-services", version.ref = "googlePlayServices" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

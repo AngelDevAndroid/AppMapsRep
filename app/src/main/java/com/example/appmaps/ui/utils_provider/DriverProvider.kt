@@ -12,10 +12,12 @@ import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import java.io.File
 
-class ClientProvider {
+class DriverProvider {
 
-    // DB clients ->
     val db = Firebase.firestore.collection("Clients")
+
+    // Get data driver
+    val dbDrivers = Firebase.firestore.collection("Drivers")
 
     var storageRef = FirebaseStorage.getInstance().getReference().child("ImgProfileClients")
 
@@ -24,8 +26,8 @@ class ClientProvider {
     }
 
     // Get doc driver
-    fun getDataClient(idDriver: String): Task<DocumentSnapshot> {
-        return db.document(idDriver).get()
+    fun getDataDriver(idDriver: String): Task<DocumentSnapshot> {
+        return dbDrivers.document(idDriver).get()
     }
 
     // Update data driver

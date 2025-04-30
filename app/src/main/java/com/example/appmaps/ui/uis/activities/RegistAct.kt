@@ -1,4 +1,4 @@
-package com.example.appmaps.ui.uis
+package com.example.appmaps.ui.uis.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,13 +13,16 @@ import com.example.appmaps.databinding.ActRegistBinding
 import com.example.appmaps.ui.models.ClientModel
 import com.example.appmaps.ui.utils_provider.ClientProvider
 import com.example.appmaps.ui.utils_provider.FrbAuthProviders
-import com.example.appmaps.ui.utils_code.ReutiliceCode
+import com.example.appmaps.ui.utils_code.ReuseCode
+import com.example.appmaps.ui.utils_provider.PushNotifProvider
 
 class RegistAct() : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var bindRegister: ActRegistBinding
     private val authProvider = FrbAuthProviders()
     private val clientProvider = ClientProvider()
+    private val pushNotifProvider = PushNotifProvider()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +37,7 @@ class RegistAct() : AppCompatActivity(), View.OnClickListener {
             insets
         }
         initViewsEvents()
+        pushNotifProvider.getTokenFcm()
     }
 
     private fun initViewsEvents() {
@@ -70,24 +74,26 @@ class RegistAct() : AppCompatActivity(), View.OnClickListener {
         if (checkEditEmpty(etNameReg, etNumberReg, etEmailReg, etPasswReg)) {
             authProvider.registerUser(etEmailReg, etPasswReg).addOnCompleteListener { it ->
                 if (it.isSuccessful) {
-                    ReutiliceCode.msgToast(this, "Credenciales guardadas.", true)
+                    ReuseCode.msgToast(this, "Credenciales guardadas.", true)
                     val nClient = ClientModel(
                         authProvider.getIdFrb(),
                         etNameReg,
                         etNumberReg,
                         etEmailReg,
-                        etPasswReg
+                        etPasswReg,
+                        ReuseCode.getTokenUtils,
+                        ""
                     )
                     clientProvider.createUser(nClient).addOnCompleteListener { result ->
                         if (result.isSuccessful) {
-                            ReutiliceCode.msgToast(this, "Usuario registrado!", true)
+                            ReuseCode.msgToast(this, "Usuario registrado!", true)
                         }else{
-                            ReutiliceCode.msgToast(this, "Usuario no completado... ${result.result.toString()}", true)
+                            ReuseCode.msgToast(this, "Usuario no completado... ${result.result.toString()}", true)
                         }
                     }
-                    //ReutiliceCode.msgToast(this, "Usuario registrado", true)
+                    //ReuseCode.msgToast(this, "Usuario registrado", true)
                 }else{
-                    ReutiliceCode.msgToast(this, "Credenciales no guardadas.", true)
+                    ReuseCode.msgToast(this, "Credenciales no guardadas.", true)
                     Log.d("LG_REG", "${it.result}")
                 }
             }
@@ -102,19 +108,19 @@ class RegistAct() : AppCompatActivity(), View.OnClickListener {
     // Check edit empty
     private fun checkEditEmpty(name: String, num: String, email: String, passw: String): Boolean {
         if (name.isEmpty()){
-            ReutiliceCode.msgToast(this, "Ingrese usuario", true)
+            ReuseCode.msgToast(this, "Ingrese usuario", true)
             return false
         }
         if (num.isEmpty()){
-            ReutiliceCode.msgToast(this, "Ingrese nùmero", true)
+            ReuseCode.msgToast(this, "Ingrese nùmero", true)
             return false
         }
         if (email.isEmpty()){
-            ReutiliceCode.msgToast(this, "Ingrese email", true)
+            ReuseCode.msgToast(this, "Ingrese email", true)
             return false
         }
         if (passw.isEmpty()){
-            ReutiliceCode.msgToast(this, "Ingrese Contraseña", true)
+            ReuseCode.msgToast(this, "Ingrese Contraseña", true)
             return false
         }
         return true

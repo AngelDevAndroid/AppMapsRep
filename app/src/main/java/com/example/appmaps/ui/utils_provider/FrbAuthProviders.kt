@@ -22,4 +22,9 @@ class FrbAuthProviders() {
     fun getIdFrb(): String {
         return auth.currentUser?.uid ?: ""
     }
+
+    // Log out auth firebase
+    fun logOut() {
+        auth.signOut()
+    }
 }
